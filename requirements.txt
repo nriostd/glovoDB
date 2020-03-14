@@ -4,6 +4,7 @@ chardet==3.0.4
 Click==7.0
 DateTime==4.3
 Flask==1.1.1
+Flask-PyMongo==2.3.0
 google-api-python-client==1.7.11
 google-auth==1.6.3
 google-auth-httplib2==0.0.3
