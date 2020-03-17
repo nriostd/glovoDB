@@ -10,13 +10,15 @@ client = PyMongo(app)
 db = client.db.numbers
 
 
-ACCESS_TOKEN = 'test'
+ACCESS_TOKEN = environ.get('ACCESS_TOKEN')
 
 
 @app.route('/api/v1/numbers', methods =['POST', 'GET', 'DELETE'])
 def Number():
     if request.method == 'POST':
-        token = request.headers.get('token')
+        pre_token = str(request.headers.get('Authorization'))
+        print(pre_token)
+        token = pre_token.replace('Basic ','')
         td_number = str(request.json.get('talkdesk_number'))
         b_number = str(request.json.get('blacklist_number'))
         print(token)
@@ -38,7 +40,9 @@ def Number():
 
 
     if request.method == 'GET':
-        token = request.headers.get('token')
+        pre_token = str(request.headers.get('Authorization'))
+        print(pre_token)
+        token = pre_token.replace('Basic ','')
         td_number = request.headers.get('talkdesk_number')
         print(td_number)
         b_number = request.headers.get('blacklist_number')
@@ -57,7 +61,9 @@ def Number():
             return jsonify({'error': 'Number not found.'}),404
 
     if request.method == 'DELETE':
-        token = request.headers.get('token')
+        pre_token = str(request.headers.get('Authorization'))
+        print(pre_token)
+        token = pre_token.replace('Basic ','')
         td_number = str(request.headers.get('talkdesk_number'))
         b_number = str(request.headers.get('blacklist_number'))
         if (token == None) or (td_number == None) or (b_number == None) or (isValidNumber(b_number) == False) or (isValidNumber(td_number) == False):
@@ -75,7 +81,9 @@ def Number():
 
 @app.route('/api/v1/numbers/all', methods = ['GET'])
 def api_all():
-    token = request.headers.get('token')
+    pre_token = str(request.headers.get('Authorization'))
+    print(pre_token)
+    token = pre_token.replace('Basic ','')
     if token is None:
         return jsonify({'error': 'Invalid request'}),400
     elif token != ACCESS_TOKEN:
