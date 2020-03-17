@@ -2,14 +2,13 @@ from flask import request, json, abort, jsonify
 from app import app
 from .utils.numbers import isValidNumber, JSONEncoder
 #from models import Number
-#from pymongo import MongoClient
+
 import json, re
 from flask_pymongo import PyMongo
 
-#mongo_uri = 'mongodb+srv://Talkdesk-integrations-eng:N1cR2nNun0@cluster0-s6b90.mongodb.net/test?retryWrites=true&w=majority'
 client = PyMongo(app)
 db = client.db.numbers
-#numbers = db.numbers
+
 
 ACCESS_TOKEN = 'test'
 
@@ -35,8 +34,8 @@ def Number():
                 result_id = re.sub('[^0-9a-zA-Z]+', '', result_id)
                 print(result_id)
                 return jsonify({'id':result_id}),200 #successfully inserted
-            return jsonify({'message': 'Already present.'}), 208 #blacklist number already reported
-            #json.loads(JSONEncoder().encode(already_present)),208
+            return jsonify({'error': 'Already present.'}),400 #blacklist number already reported
+
 
     if request.method == 'GET':
         token = request.headers.get('token')
