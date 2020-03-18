@@ -14,7 +14,7 @@ db = client.db.numbers
 ACCESS_TOKEN = environ.get('ACCESS_TOKEN')
 
 
-@app.route('/api/v1/numbers', methods =['POST', 'GET', 'DELETE'])
+@app.route('/api/blacklist', methods =['POST', 'GET', 'DELETE'])
 def Number():
     if request.method == 'POST':
         pre_token = str(request.headers.get('Authorization'))
@@ -80,7 +80,7 @@ def Number():
 
 
 
-@app.route('/api/v1/numbers/all', methods = ['GET'])
+@app.route('/api/blacklist/all', methods = ['GET'])
 def api_all():
     pre_token = str(request.headers.get('Authorization'))
     print(pre_token)
