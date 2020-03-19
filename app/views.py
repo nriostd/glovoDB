@@ -2,6 +2,7 @@ from flask import request, json, abort, jsonify
 from app import app
 from .utils.numbers import isValidNumber, JSONEncoder
 from os import environ
+import re
 #from models import Number
 
 import json, re
@@ -45,8 +46,10 @@ def Number():
         print(pre_token)
         token = pre_token.replace('Basic ','')
         td_number = str(request.args.get('talkdesk_number'))
+        td_number = re.sub(' ', '+', td_number)
         print(td_number)
         b_number = str(request.args.get('blacklist_number'))
+        b_number = re.sub(' ', '+', b_number)
         print(b_number)
         if (token == None) or (td_number == None) or (b_number == None) or (isValidNumber(b_number) == False) or (isValidNumber(td_number) == False):
             return jsonify({'error': 'Invalid request'}),400 #invalid request
