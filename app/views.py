@@ -58,14 +58,11 @@ def Number():
 
 @app.route('/api/blacklist/all', methods = ['GET'])
 def api_all():
-    if token is None:
-        return jsonify({'error': 'Invalid request'}),400
-    else:
-        json_dict = {'blacklist_numbers': [], 'total_numbers': 0}
-        for doc in db.find():
-            temp = json_dict['blacklist_numbers']
-            dict = {'_id': str(doc['_id']), 'talkdesk_number': doc['talkdesk_number'], 'blacklist_number': doc['blacklist_number']}
-            temp.append(dict)
+    json_dict = {'blacklist_numbers': [], 'total_numbers': 0}
+    for doc in db.find():
+        temp = json_dict['blacklist_numbers']
+        dict = {'_id': str(doc['_id']), 'talkdesk_number': doc['talkdesk_number'], 'blacklist_number': doc['blacklist_number']}
+        temp.append(dict)
 
-        json_dict['total_numbers'] = len(json_dict['blacklist_numbers'])
-        return json.loads(json.dumps(json_dict)),200
+    json_dict['total_numbers'] = len(json_dict['blacklist_numbers'])
+    return json.loads(json.dumps(json_dict)),200
