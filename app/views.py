@@ -11,9 +11,16 @@ from flask_pymongo import PyMongo
 client = PyMongo(app)
 db = client.db.numbers
 
+ACCESS_TOKEN = environ.get('ACCESS_TOKEN')
+
 @app.route('/api/blacklist', methods =['POST', 'GET', 'DELETE'])
 def Number():
     if request.method == 'POST':
+        pre_token = str(request.headers.get('Authorization'))
+        token = pre_token.replace('Basic ', '')
+        if (token == None) or (token != ACCESS_TOKEN):
+            logging.error('Token missing or wrong token')
+            return jsonify({'error': 'Unauthorized request'}),401
         td_number = str(request.json.get('talkdesk_number'))
         b_number = str(request.json.get('blacklist_number'))
         if (td_number == None) or (b_number == None) or (isValidNumber(b_number) == False) or (isValidNumber(td_number) == False):
@@ -29,6 +36,11 @@ def Number():
 
 
     if request.method == 'GET':
+        pre_token = str(request.headers.get('Authorization'))
+        token = pre_token.replace('Basic ', '')
+        if (token == None) or (token != ACCESS_TOKEN):
+            logging.error('Token missing or wrong token')
+            return jsonify({'error': 'Unauthorized request'}),401
         td_number = str(request.json.get('talkdesk_number'))
         td_number = re.sub(' ', '+', td_number)
         b_number = str(request.json.get('blacklist_number'))
@@ -44,6 +56,11 @@ def Number():
             return jsonify({'error': 'Number not found.'}),404
 
     if request.method == 'DELETE':
+        pre_token = str(request.headers.get('Authorization'))
+        token = pre_token.replace('Basic ', '')
+        if (token == None) or (token != ACCESS_TOKEN):
+            logging.error('Token missing or wrong token')
+            return jsonify({'error': 'Unauthorized request'}),401
         td_number = str(request.headers.get('talkdesk_number'))
         b_number = str(request.headers.get('blacklist_number'))
         if (td_number == None) or (b_number == None) or (isValidNumber(b_number) == False) or (isValidNumber(td_number) == False):
@@ -59,6 +76,11 @@ def Number():
 
 @app.route('/api/blacklist/all', methods = ['GET'])
 def api_all():
+    pre_token = str(request.headers.get('Authorization'))
+    token = pre_token.replace('Basic ', '')
+    if (token == None) or (token != ACCESS_TOKEN):
+        logging.error('Token missing or wrong token')
+        return jsonify({'error': 'Unauthorized request'}),401
     json_dict = {'blacklist_numbers': [], 'total_numbers': 0}
     for doc in db.find():
         temp = json_dict['blacklist_numbers']
