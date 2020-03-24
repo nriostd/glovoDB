@@ -3,6 +3,7 @@ from app import app
 from .utils.numbers import isValidNumber, JSONEncoder
 from os import environ
 import re
+import logging
 
 import json, re
 from flask_pymongo import PyMongo
@@ -24,13 +25,13 @@ def Number():
                 result_id = JSONEncoder().encode(inserted.inserted_id)
                 result_id = re.sub('[^0-9a-zA-Z]+', '', result_id)
                 return jsonify({'id':result_id}),200 #successfully inserted
-            return jsonify({'error': 'Already present.'}),400 #blacklist number already reported
+            return jsonify({'error': 'Already present.'}),403 #blacklist number already reported
 
 
     if request.method == 'GET':
-        td_number = str(request.args.get('talkdesk_number'))
+        td_number = str(request.json.get('talkdesk_number'))
         td_number = re.sub(' ', '+', td_number)
-        b_number = str(request.args.get('blacklist_number'))
+        b_number = str(request.json.get('blacklist_number'))
         b_number = re.sub(' ', '+', b_number)
         if (td_number == None) or (b_number == None) or (isValidNumber(b_number) == False) or (isValidNumber(td_number) == False):
             return jsonify({'error': 'Invalid request'}),400 #invalid request
