@@ -42,6 +42,7 @@ def Number():
             logging.error('Token missing or wrong token')
             return jsonify({'error': 'Unauthorized request'}),401
         td_number = str(request.headers.get('talkdesk_number'))
+        logging.info(td_number)
         td_number = re.sub(' ', '+', td_number)
         b_number = str(request.headers.get('blacklist_number'))
         b_number = re.sub(' ', '+', b_number)
