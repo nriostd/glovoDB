@@ -11,14 +11,13 @@ from flask_pymongo import PyMongo
 client = PyMongo(app)
 db = client.db.numbers
 
-ACCESS_TOKEN = environ.get('ACCESS_TOKEN')
+API_KEY = environ.get('API_KEY')
 
 @app.route('/api/blacklist', methods =['POST', 'GET', 'DELETE'])
 def Number():
     if request.method == 'POST':
-        pre_token = str(request.headers.get('Authorization'))
-        token = pre_token.replace('Basic ', '')
-        if (token == None) or (token != ACCESS_TOKEN):
+        token = str(request.headers.get('Authorization'))
+        if (token == None) or (token != API_KEY):
             logging.error('Token missing or wrong token')
             return jsonify({'error': 'Unauthorized request'}),401
         td_number = str(request.json.get('talkdesk_number'))
@@ -36,9 +35,8 @@ def Number():
 
 
     if request.method == 'GET':
-        pre_token = str(request.headers.get('Authorization'))
-        token = pre_token.replace('Basic ', '')
-        if (token == None) or (token != ACCESS_TOKEN):
+        token = str(request.headers.get('Authorization'))
+        if (token == None) or (token != API_KEY):
             logging.error('Token missing or wrong token')
             return jsonify({'error': 'Unauthorized request'}),401
         td_number = str(request.args.get('talkdesk_number'))
@@ -56,9 +54,8 @@ def Number():
             return jsonify({'error': 'Number not found.'}),404
 
     if request.method == 'DELETE':
-        pre_token = str(request.headers.get('Authorization'))
-        token = pre_token.replace('Basic ', '')
-        if (token == None) or (token != ACCESS_TOKEN):
+        token = str(request.headers.get('Authorization'))
+        if (token == None) or (token != API_KEY):
             logging.error('Token missing or wrong token')
             return jsonify({'error': 'Unauthorized request'}),401
         td_number = str(request.headers.get('talkdesk_number'))
@@ -76,9 +73,8 @@ def Number():
 
 @app.route('/api/blacklist/all', methods = ['GET'])
 def api_all():
-    pre_token = str(request.headers.get('Authorization'))
-    token = pre_token.replace('Basic ', '')
-    if (token == None) or (token != ACCESS_TOKEN):
+    token = str(request.headers.get('Authorization'))
+    if (token == None) or (token != API_KEY):
         logging.error('Token missing or wrong token')
         return jsonify({'error': 'Unauthorized request'}),401
     json_dict = {'blacklist_numbers': [], 'total_numbers': 0}
