@@ -60,9 +60,9 @@ def Number():
         if (token == None) or (token != API_KEY):
             logging.error('Token missing or wrong token')
             return jsonify({'error': 'Unauthorized request'}),401
-        td_number = str(request.headers.get('talkdesk_number'))
-        td_number = re.sub(' ', '+', td_number)
-        b_number = str(request.headers.get('blacklist_number'))
+        td_number = str(request.json.get('talkdesk_number'))
+        td_number = re.sub(' ','+', td_number)
+        b_number = str(request.json.get('blacklist_number'))
         b_number = re.sub(' ', '+', b_number)
         if (td_number == None) or (b_number == None) or (isValidNumber(b_number) == False) or (isValidNumber(td_number) == False):
             return jsonify({'error': 'Invalid request'}),400 #invalid request
